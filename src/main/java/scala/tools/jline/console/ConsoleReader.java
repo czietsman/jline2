@@ -1295,7 +1295,7 @@ public class ConsoleReader
                             if (buf.buffer.length() == 0) {
                                 return null;
                             } else {
-                                deleteCurrentCharacter();
+                                success = deleteCurrentCharacter();
                             }
                             break;
 
