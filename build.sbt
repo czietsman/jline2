@@ -26,21 +26,18 @@ proguardOptions ++= Seq(
 
 proguardInJars := Nil
 
-makeInJarFilter <<= (makeInJarFilter) {
-  (makeInJarFilter) => {
-    (file) => {
-      if (!file.startsWith("jansi")) makeInJarFilter(file)
-      else List(
-        "!META-INF/MANIFEST.MF",
-        "org/fusesource/hawtjni/runtime",
-        "org/fusesource/hawtjni/runtime/Callback.class",
-        "org/fusesource/hawtjni/runtime/Library.class",
-        "!org/fusesource/hawtjni/**",
-        "!META-INF/maven/org.fusesource.hawtjni",
-        "!META-INF/maven/org.fusesource.jansi",
-        "!META-INF/maven/org.fusesource.hawtjni/**",
-        "!META-INF/maven/org.fusesource.jansi/**"
-      ).mkString(", ")
-    }
-  }
+makeInJarFilter ~= { prevFilter =>
+  val jansiFilter = List(
+    "!META-INF/MANIFEST.MF",
+    "org/fusesource/hawtjni/runtime",
+    "org/fusesource/hawtjni/runtime/Callback.class",
+    "org/fusesource/hawtjni/runtime/Library.class",
+    "!org/fusesource/hawtjni/**",
+    "!META-INF/maven/org.fusesource.hawtjni",
+    "!META-INF/maven/org.fusesource.jansi",
+    "!META-INF/maven/org.fusesource.hawtjni/**",
+    "!META-INF/maven/org.fusesource.jansi/**"
+  ).mkString(",")
+  // What blank line
+  file => if (file startsWith "jansi-") jansiFilter else prevFilter(file)
 }
