@@ -14,7 +14,7 @@ retrieveManaged := true
 parallelExecution in Test := false
 
 libraryDependencies ++= Seq(
-	"org.fusesource.jansi" % "jansi" % "1.4",
+	// "org.fusesource.jansi" % "jansi" % "1.6"
 	"com.novocode" % "junit-interface" % "0.7" % "test->default"
 )
 
