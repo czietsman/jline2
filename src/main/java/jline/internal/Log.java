@@ -91,6 +91,11 @@ public final class Log
         }
     }
 
+    public static <T> T caught(T replacement, Throwable t, String where) {
+      debug("Discarding exception " + t + " at " + where, t.getMessage());
+      return replacement;
+    }
+
     public static void trace(final Object... messages) {
         if (TRACE) {
             log(Level.TRACE, messages);

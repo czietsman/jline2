@@ -190,6 +190,7 @@ public class NonBlockingInputStream
                     wait(timeout);
                 }
                 catch (InterruptedException e) {
+                    Log.caught(null, e, "read(long timeout, boolean isPeek)");
                     /* IGNORED */
                 }
                     
@@ -279,6 +280,7 @@ public class NonBlockingInputStream
                     }
                 }
                 catch (InterruptedException e) {
+                    Log.caught(null, e, "run");
                     /* IGNORED */
                 }
             }
@@ -294,6 +296,7 @@ public class NonBlockingInputStream
                     charRead = in.read();
                 }
                 catch (IOException e) {
+                    Log.caught(null, e, "run");
                     failure = e;
                 }
                 

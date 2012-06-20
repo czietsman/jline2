@@ -252,6 +252,7 @@ public class InputStreamReader extends Reader {
                         }
                     } catch (IOException e) {
                         // available didn't work so just try the read
+                        Log.caught(null, e, "read(char[] buf, int offset, int length)");
                     }
 
                     int to_read = bytes.capacity() - bytes.limit();
@@ -329,7 +330,7 @@ public class InputStreamReader extends Reader {
             try {
                 return bytes.hasRemaining() || in.available() > 0;
             } catch (IOException e) {
-                return false;
+                return Log.caught(false, e, "ready");
             }
         }
     }

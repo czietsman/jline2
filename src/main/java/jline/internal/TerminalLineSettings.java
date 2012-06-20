@@ -215,6 +215,7 @@ public final class TerminalLineSettings
                 c.close();
             }
             catch (Exception e) {
+                Log.caught(null, e, "close(final Closeable... closeables)");
                 // Ignore
             }
         }

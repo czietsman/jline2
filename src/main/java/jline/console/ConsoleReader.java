@@ -450,7 +450,7 @@ public class ConsoleReader
             aos.flush();
             return baos.toString();
         } catch (IOException e) {
-            return str;
+            return Log.caught(str, e, "stripAnsi(String str)");
         }
     }
 
@@ -1956,7 +1956,7 @@ public class ConsoleReader
         }
         catch (IOException e) {
             e.printStackTrace();
-            return false;
+            return Log.caught(false, e, "replace(final int num, final String replacement)");
         }
         return true;
     }
@@ -3215,7 +3215,7 @@ public class ConsoleReader
             clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         }
         catch (Exception e) {
-            return false;
+            return Log.caught(false, e, "paste()");
         }
 
         if (clipboard == null) {
@@ -3242,6 +3242,7 @@ public class ConsoleReader
                 }
                 catch (Exception e) {
                     // ignore
+                    Log.caught("", e, "paste()");
                 }
             }
 
@@ -3396,9 +3397,11 @@ public class ConsoleReader
                             sleep(3);
                         }
                         catch (IOException e) {
+                            Log.caught(null, e, "beforeReadLine(final String prompt, final Character mask)");
                             return;
                         }
                         catch (InterruptedException e) {
+                            Log.caught(null, e, "beforeReadLine(final String prompt, final Character mask)");
                             return;
                         }
                     }
