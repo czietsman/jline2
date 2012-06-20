@@ -33,16 +33,83 @@ public class KeyMap {
     private Object[] mapping = new Object[KEYMAP_LENGTH];
     private Object anotherKey = null;
     private String name;
+    private int maxKeyLength;
     private boolean isViKeyMap;
     
+    public static String keyName(int index) {
+      if (index == 0)
+          return "NULL";
+      else if (index <= 26)
+          return "CTRL_" + ((char)('A' + (index - 1)));
+      else if ('a' <= index && index <= 'z')
+          return "'" + (char)index + "'";
+      else switch(index) {
+        case 27:
+            return "ESC";
+        case 28:
+            return "CTRL-\\";
+        case 29:
+            return "CTRL-]";
+        case 30:
+            return "CTRL-^";
+        case 31:
+            return "CTRL-_";
+        case 32:
+            return "SPACE";
+        case 127:
+            return "DELETE";
+        default:
+            return "'" + (char)index + "'";
+      }
+    }
+
+    @Override
+    public String toString() {
+        int i = 0;
+        StringBuilder sb = new StringBuilder("KeyMap(\"" + name + "\") {\n");
+        String fmt = "%" + (maxKeyLength + 2) + "s -> %s\n";
+
+        for (Operation op: Operation.values()) {
+          if (mapping[i] != null) {
+            String k = keyName(i);
+            String v;
+            if (mapping[i] instanceof KeyMap)
+                v = "KeyMap(\"" + ((KeyMap)mapping[i]).getName() + "\")";
+            else
+                v = mapping[i].toString();
+
+            sb.append(String.format(fmt, k, v));
+          }
+          i += 1;
+        }
+
+        sb.append("}");
+        return sb.toString();
+    }
+
     public KeyMap(String name, boolean isViKeyMap) {
         this(name, new Object[KEYMAP_LENGTH], isViKeyMap);
+    }
+
+    private int calculateMaxKeyLength() {
+      int max = 0;
+      int i = 0;
+      for (Operation op: Operation.values()) {
+        if (mapping[i] != null) {
+          int len = keyName(i).length();
+          if (len > max)
+            max = len;
+        }
+        i += 1;
+      }
+      return max;
     }
 
     protected KeyMap(String name, Object[] mapping, boolean isViKeyMap) {
         this.mapping = mapping;
         this.name = name;
         this.isViKeyMap = isViKeyMap;
+        this.maxKeyLength = calculateMaxKeyLength();
     }
     
     public boolean isViKeyMap() {
@@ -110,7 +177,7 @@ public class KeyMap {
                 }
                 if (i < keySeq.length() - 1) {
                     if (!(map.mapping[c] instanceof KeyMap)) {
-                        KeyMap m = new KeyMap("anonymous", false);
+                        KeyMap m = new KeyMap("anonymous(created by " + map.getName() + ")", false);
                         if (map.mapping[c] != Operation.DO_LOWERCASE_VERSION) {
                             m.anotherKey = map.mapping[c];
                         }
